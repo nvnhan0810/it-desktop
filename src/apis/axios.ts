@@ -1,7 +1,12 @@
 import axios from "axios";
 
 axios.interceptors.request.use((config) => {
-    config.headers.Authorization = `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI5ZGU4OTYxZS0zOTI3LTQ5MGItODRkYy1hNmNlZGJmNzY2NzkiLCJqdGkiOiJhN2E0MmU3MjY2MzY5Y2Y1OGEyODE4OTRiZDgyOTVmYjk4YTdiZTJiNzMxN2EzNjVhNGIwMjVkOWY1MzY5NGM3NWVmYTFhM2U4N2EyOWUwMCIsImlhdCI6MTczNjI2MjkwMi4xNzE0NDIsIm5iZiI6MTczNjI2MjkwMi4xNzE0NDQsImV4cCI6MTczNzU1ODkwMi4xNjAxNywic3ViIjoiMSIsInNjb3BlcyI6W119.YXnpvo8anKdJWXLnVtSz-i0fgYhhmluF4YAnu-etk2ccMWvjw1qg2UZFLK1SyEkuHxZDbFkzBIQtVI6LcVCprcBSI0JAtjayBqmdZE8OuGkzd2UajA-9PitprtU46wO2kzAKQH_38P0kL0a8mO9W1qQUuGdKAWRBIH97O428myEoBt3bOsT1DZh1MqW59h05ulCi5EJqt0YxXQ1oJDCmnTMvnlbVj3ZK1dnGJBoU-qAtpIZV8wI8S6aHgEF5keDBstxuznW38fEUz8iSIJA1z7RSLTYLus1rrbOvjO4vcL7go4QPEfnKEEnPEWzvNKKlj6F2Ri5_pUegacS2F7JulgxMMJ5uqKMrr7AGmv4qUwc9e_IZ5itGIxx5hXhS_eBZzWGysqVIyS1SEO_kMgpawr0cn6HOdna1Tv8neLh84BXl59PAWQSTueqGDqnrHEdPQ39aNixXlGXBy3I19JsXKM7PwWaze4FxaPvJfeWfNN7T7vjRmFB8qUfQiQ5oK_Bvc5rfivROMp_RqCFHWw648QtJ7UGfHQRD3TxqaLWN9OsP-jMwpjp0V7XZT-G5bfIrIcpz5Ra4u1X4NCpP0nKldw-noY7GlohfDqVlg6Wliw1itAYrpgfAkKlmsjpNg0Hyr96IW5SuZPuEqR6nT7_0C87s_Qp21PnG_v0SSzOBEF4`;
+    if (localStorage) {
+        const token = localStorage.getItem('AUTH_TK');
+        if (token) {
+            config.headers.Authorization = `Bearer ${token}`;
+        }
+    }
 
     return config;
 })

@@ -20,6 +20,7 @@ import { z } from "zod";
 
 const formSchema = z.object({
     title: z.string(),
+    tags: z.string(),
     is_published: z.boolean(),
     published_at: z.date().nullable().transform((value) => value ?? null),
     content: z.string(),
@@ -63,6 +64,13 @@ export const EditForm = ({ post}: { post: Post}) => {
             is_published: post.isPublished,
             published_at: post.publishedDate,
             content: post.content,
+            tags: post.tags?.reduce((result, item) => {
+                if (result == '') {
+                    return item.name;
+                } else {
+                    return `${result},${item.name}`;
+                }
+            }, ''),
         }
     })
 
@@ -131,7 +139,20 @@ export const EditForm = ({ post}: { post: Post}) => {
                                     </FormItem>
                                 )}
                             />
-                            <div className="mb-4 grid w-full items-center gap-1.5">
+
+                            <FormField
+                                control={form.control}
+                                name="tags"
+                                render={({ field }) => (
+                                    <FormItem className="mb-4 grid w-full items-center gap-1.5">
+                                        <FormLabel htmlFor="tags">Tiêu đề</FormLabel>
+                                        <FormControl>
+                                            <Input id="tags" {...field} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />                            <div className="mb-4 grid w-full items-center gap-1.5">
                                 <FormField
                                     control={form.control}
                                     name="is_published"

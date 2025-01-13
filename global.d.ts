@@ -1,5 +1,9 @@
+import { TokenResponse } from "@/types/user.type";
+
 export interface IElectronAPI {
-  loadPreferences: () => Promise<void>,
+  startLogin: () => void;
+  onLoginSuccess: (callback: (data: TokenResponse) => void) => void;
+  onLoginFailure: (callback: (error: string) => void) => void;
 }
 
 declare global {

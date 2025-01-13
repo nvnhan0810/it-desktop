@@ -18,6 +18,7 @@ import { z } from "zod";
 
 const formSchema = z.object({
     title: z.string(),
+    tags: z.string(),
     is_published: z.boolean(),
     published_at: z.date().nullable().transform((value) => value ?? null),
     content: z.string(),
@@ -95,6 +96,19 @@ export const PostNewPage = () => {
                                         <FormMessage />
                                     </FormItem>
                                 )} 
+                            />
+                            <FormField
+                                control={form.control}
+                                name="tags"
+                                render={({ field }) => (
+                                    <FormItem className="mb-4 grid w-full items-center gap-1.5">
+                                        <FormLabel htmlFor="tags">Tags</FormLabel>
+                                        <FormControl>
+                                            <Input id="tags" {...field} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
                             />
                             <div className="mb-4 grid w-full items-center gap-1.5">
                                 <FormField
