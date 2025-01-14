@@ -15,7 +15,7 @@ const PostListItem = ({ post }: {post: Post}) => {
             }
         )}>
             <h2 className="text-lg font-semibold">{post.title}</h2>
-            <p className="text-gray-700">{post.content.substring(0, 100)}...</p>
+            <p className="text-gray-700 break-all">{post.content.substring(0, 100)}...</p>
             {post.tags != undefined && post.tags.length > 0
                 ? (
                     <div className="flex gap-2 overflow-hidden mt-3">

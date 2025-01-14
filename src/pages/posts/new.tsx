@@ -1,5 +1,4 @@
 import { createPost, PostDataRequest } from "@/apis/post.apis";
-import { MarkdownPreview } from "@/components/markdown-preview";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -13,6 +12,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
 import { CalendarIcon, Rss } from "lucide-react";
 import { useForm, useWatch } from "react-hook-form";
+import { MarkdownPreview } from "react-markdown-preview";
 import { Link, useNavigate } from "react-router-dom";
 import { z } from "zod";
 
@@ -266,7 +266,9 @@ export const PostNewPage = () => {
                         </form>
                     </Form>
                 </div>
-                <MarkdownPreview doc={doc} />
+                <div className="rounded border px-3 py-2 markdown-body !text-sm">
+                    <MarkdownPreview doc={doc} />
+                </div>
             </div>
         </div>
     );
