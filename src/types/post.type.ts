@@ -2,6 +2,8 @@ import { Tag } from "./tag.type";
 
 export type PostItemResponse = Post & {
     public_tags?: Tag[];
+    is_published?: boolean;
+    published_at: string;
 }
 
 export type Post = {

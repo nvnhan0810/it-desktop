@@ -5,16 +5,33 @@ import { FuseV1Options, FuseVersion } from '@electron/fuses';
 
 const config: ForgeConfig = {
   packagerConfig: {
-    name: "My IT Blog App",
+    name: "IT Blog App",
     asar: true,
+    icon: 'static/images/icon',
+    appBundleId: "com.nvnhan0810.it-desktop",
+    appCategoryType: "public.app-category.utilities",
+    protocols: [
+      {
+        name: "Nvnhan0810 IT Blog Protocol",
+        schemes: ["nvnhan0810-it-desktop"]
+      }
+    ]
   },
   rebuildConfig: {},
   makers: [
     {
       name: '@electron-forge/maker-dmg',
       config: {
-        format: 'ULFO'
-      }
+        format: 'ULFO',
+        extendInfo: {
+          CFBundleURLTypes: [
+            {
+              CFBundleURLName: "Nvnhan0810 IT Blog Protocol",
+              CFBundleURLSchemes: ["nvnhan0810-it-desktop"]
+            }
+          ]
+        }
+      },
     }
   ],
   plugins: [

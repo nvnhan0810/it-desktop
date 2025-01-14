@@ -25,7 +25,7 @@ export const MarkdownPreview = ({doc}: {doc: string}) => {
     });
 
     return (
-        <div className="rounded border px-3 py-2 markdown-body">
+        <div className="rounded border px-3 py-2 markdown-body !text-sm">
             {result}
         </div>
     );

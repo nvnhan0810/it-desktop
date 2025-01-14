@@ -4,7 +4,8 @@ import PostListItem from "@/components/post-list-item";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAppSelector } from "@/store/hooks";
-import { Post } from "@/types/post.type";
+import { Post, PostItemResponse } from "@/types/post.type";
+import { parse } from "date-fns";
 import { CirclePlus, Hash } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
@@ -12,29 +13,44 @@ import { Link } from "react-router-dom";
 export const IndexPage = () => {
     const user = useAppSelector((state) => state.auth.user);
 
+    const [loading, setLoading] = useState(false);
     const [page, setPage] = useState(1);
     const [lastPage, setLastPage] = useState(1);
     const [search, setSearch] = useState('');
     const [posts, setPosts] = useState<Post[]>([]);
 
     useEffect(() => {
+        if (loading) {
+            return;
+        }
+
         handleFetchPosts();
     }, [page, lastPage, user, search]);
 
     const handleFetchPosts = async () => {
+        setLoading(true);
         const res = await fetchPosts({ user, page, search });
 
         if (res.status == 200) {
+            const data: Post[] = res.data.data.map((item: PostItemResponse) => {
+                console.log(!!item.is_published);
+                return {
+                    ...item,
+                    isPublished: !!item.is_published,
+                    publishedDate: parse(item.published_at, 'yyyy-MM-dd hh:mm:ss', new Date()),
+                }
+            });
             if (page === 1) {
-                setPosts([...res.data.data]);
+                setPosts([...data]);
             } else {
                 setPosts([
                     ...posts,
-                    ...res.data.data,
+                    ...data,
                 ]);
             }
             setLastPage(res.data.last_page);
         }
+        setLoading(false);
     }
 
     const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {

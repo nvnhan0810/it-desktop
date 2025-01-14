@@ -19,6 +19,13 @@ if (process.defaultApp) {
   app.setAsDefaultProtocolClient(Config.app.protocol)
 }
 
+
+// Handle the protocol. In this case, we choose to show an Error Box.
+app.on('open-url', (event, url) => {
+  event.preventDefault();
+  handleAuthCallback(url);
+})
+
 const gotTheLock = app.requestSingleInstanceLock()
 
 if (!gotTheLock) {
@@ -37,11 +44,6 @@ if (!gotTheLock) {
   // Create mainWindow, load the rest of the app, etc...
   app.whenReady().then(() => {
     createWindow()
-  })
-
-  // Handle the protocol. In this case, we choose to show an Error Box.
-  app.on('open-url', (event, url) => {
-    handleAuthCallback(url);
   })
 }
 
@@ -64,7 +66,7 @@ const createWindow = () => {
   }
 
   // Open the DevTools.
-  mainWindow.webContents.openDevTools();
+  // mainWindow.webContents.openDevTools();
 };
 
 // Quit when all windows are closed, except on macOS. There, it's common

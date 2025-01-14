@@ -15,13 +15,13 @@ const AuthHeaderIcon = () => {
     ) : (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <Avatar>
+                    <Avatar className="w-8 h-8">
                     <AvatarImage src={user.avatar} />
                     <AvatarFallback>AV</AvatarFallback>
                 </Avatar>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56">
-                <DropdownMenuItem>Profile</DropdownMenuItem>
+                <DropdownMenuItem>Đăng xuất</DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>
     );

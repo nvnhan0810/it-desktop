@@ -15,9 +15,6 @@ const initialState: AuthState = {
 export const fetchProfile = createAsyncThunk('auth/loadProfile', async () => {
     const res = await fetchUserProfile();
 
-    console.log(res.status);
-    console.log(res.data);
-
     if (res.status == 200) {
         return res.data; 
     }
