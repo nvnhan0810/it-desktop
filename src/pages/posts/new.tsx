@@ -1,4 +1,5 @@
 import { createPost, PostDataRequest } from "@/apis/post.apis";
+import PostContentPreview from "@/components/post-content-preview";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -12,7 +13,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
 import { CalendarIcon, Rss } from "lucide-react";
 import { useForm, useWatch } from "react-hook-form";
-import { MarkdownPreview } from "react-markdown-preview";
 import { Link, useNavigate } from "react-router-dom";
 import { z } from "zod";
 
@@ -80,171 +80,173 @@ export const PostNewPage = () => {
                 </Link>
             </div>
 
-            <div className="grid grid-cols-2 gap-2">
-                <div className="">
-                    <Form {...form}>
-                        <form onSubmit={form.handleSubmit(onSubmit)}>
-                            <FormField 
-                                control={form.control} 
-                                name="title" 
-                                render={({ field }) => (
-                                    <FormItem className="mb-4 grid w-full items-center gap-1.5">
-                                        <FormLabel htmlFor="title">Tiêu đề</FormLabel>
-                                        <FormControl>
-                                            <Input id="title" {...field} />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )} 
-                            />
+            <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)}>
+                    <div className="grid grid-cols-1 gap-2">
+                        <FormField
+                            control={form.control}
+                            name="title"
+                            render={({ field }) => (
+                                <FormItem className="mb-4 grid w-full items-center gap-1.5">
+                                    <FormLabel htmlFor="title">Tiêu đề</FormLabel>
+                                    <FormControl>
+                                        <Input id="title" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+
+                        <FormField
+                            control={form.control}
+                            name="tags"
+                            render={({ field }) => (
+                                <FormItem className="mb-4 grid w-full items-center gap-1.5">
+                                    <FormLabel htmlFor="tags">Tags</FormLabel>
+                                    <FormControl>
+                                        <Input id="tags" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+
+                        <div className="mb-4 grid w-full items-center gap-1.5">
                             <FormField
                                 control={form.control}
-                                name="tags"
+                                name="is_published"
                                 render={({ field }) => (
-                                    <FormItem className="mb-4 grid w-full items-center gap-1.5">
-                                        <FormLabel htmlFor="tags">Tags</FormLabel>
+                                    <FormItem className="flex items-center space-x-2">
                                         <FormControl>
-                                            <Input id="tags" {...field} />
+                                            <Switch id="is_published" checked={field.value} onCheckedChange={field.onChange} />
                                         </FormControl>
-                                        <FormMessage />
+                                        <FormLabel htmlFor="is_published">Xuất bản</FormLabel>
                                     </FormItem>
                                 )}
                             />
-                            <div className="mb-4 grid w-full items-center gap-1.5">
-                                <FormField
-                                    control={form.control}
-                                    name="is_published"
-                                    render={({ field }) => (
-                                        <FormItem className="flex items-center space-x-2">
-                                            <FormControl>
-                                                <Switch id="is_published" checked={field.value} onCheckedChange={field.onChange} />
-                                            </FormControl>
-                                            <FormLabel htmlFor="is_published">Xuất bản</FormLabel>
-                                        </FormItem>
-                                    )}
-                                />
-                                <FormField
-                                    control={form.control}
-                                    name="published_at"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <Popover>
-                                                <PopoverTrigger asChild>
-                                                    <FormControl>
-                                                        <Button
-                                                            variant={"outline"}
-                                                            className={cn(
-                                                                "w-full pl-3 text-left font-normal",
-                                                                !field.value && "text-muted-foreground"
-                                                            )}
-                                                        >
-                                                            {field.value ? (
-                                                                format(field.value, "MM/dd/yyyy hh:mm aa")
-                                                            ) : (
-                                                                <span>MM/DD/YYYY hh:mm aa</span>
-                                                            )}
-                                                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                                        </Button>
-                                                    </FormControl>
-                                                </PopoverTrigger>
-                                                <PopoverContent className="w-auto p-0">
-                                                    <div className="sm:flex">
-                                                        <Calendar
-                                                            mode="single"
-                                                            selected={field.value}
-                                                            onSelect={handleDateSelect}
-                                                            initialFocus
-                                                        />
-                                                        <div className="flex flex-col sm:flex-row sm:h-[300px] divide-y sm:divide-y-0 sm:divide-x">
-                                                            <ScrollArea className="w-64 sm:w-auto">
-                                                                <div className="flex sm:flex-col p-2">
-                                                                    {Array.from({ length: 12 }, (_, i) => i + 1)
-                                                                        .reverse()
-                                                                        .map((hour) => (
-                                                                            <Button
-                                                                                key={hour}
-                                                                                size="icon"
-                                                                                variant={
-                                                                                    field.value &&
-                                                                                        field.value.getHours() % 12 === hour % 12
-                                                                                        ? "default"
-                                                                                        : "ghost"
-                                                                                }
-                                                                                className="sm:w-full shrink-0 aspect-square"
-                                                                                onClick={() =>
-                                                                                    handleTimeChange("hour", hour.toString())
-                                                                                }
-                                                                            >
-                                                                                {hour}
-                                                                            </Button>
-                                                                        ))}
-                                                                </div>
-                                                                <ScrollBar
-                                                                    orientation="horizontal"
-                                                                    className="sm:hidden"
-                                                                />
-                                                            </ScrollArea>
-                                                            <ScrollArea className="w-64 sm:w-auto">
-                                                                <div className="flex sm:flex-col p-2">
-                                                                    {Array.from({ length: 12 }, (_, i) => i * 5).map(
-                                                                        (minute) => (
-                                                                            <Button
-                                                                                key={minute}
-                                                                                size="icon"
-                                                                                variant={
-                                                                                    field.value &&
-                                                                                        field.value.getMinutes() === minute
-                                                                                        ? "default"
-                                                                                        : "ghost"
-                                                                                }
-                                                                                className="sm:w-full shrink-0 aspect-square"
-                                                                                onClick={() =>
-                                                                                    handleTimeChange("minute", minute.toString())
-                                                                                }
-                                                                            >
-                                                                                {minute.toString().padStart(2, "0")}
-                                                                            </Button>
-                                                                        )
-                                                                    )}
-                                                                </div>
-                                                                <ScrollBar
-                                                                    orientation="horizontal"
-                                                                    className="sm:hidden"
-                                                                />
-                                                            </ScrollArea>
-                                                            <ScrollArea className="">
-                                                                <div className="flex sm:flex-col p-2">
-                                                                    {["AM", "PM"].map((ampm) => (
+                            <FormField
+                                control={form.control}
+                                name="published_at"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <Popover>
+                                            <PopoverTrigger asChild>
+                                                <FormControl>
+                                                    <Button
+                                                        variant={"outline"}
+                                                        className={cn(
+                                                            "w-full pl-3 text-left font-normal",
+                                                            !field.value && "text-muted-foreground"
+                                                        )}
+                                                    >
+                                                        {field.value ? (
+                                                            format(field.value, "MM/dd/yyyy hh:mm aa")
+                                                        ) : (
+                                                            <span>MM/DD/YYYY hh:mm aa</span>
+                                                        )}
+                                                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                                    </Button>
+                                                </FormControl>
+                                            </PopoverTrigger>
+                                            <PopoverContent className="w-auto p-0">
+                                                <div className="sm:flex">
+                                                    <Calendar
+                                                        mode="single"
+                                                        selected={field.value}
+                                                        onSelect={handleDateSelect}
+                                                        initialFocus
+                                                    />
+                                                    <div className="flex flex-col sm:flex-row sm:h-[300px] divide-y sm:divide-y-0 sm:divide-x">
+                                                        <ScrollArea className="w-64 sm:w-auto">
+                                                            <div className="flex sm:flex-col p-2">
+                                                                {Array.from({ length: 12 }, (_, i) => i + 1)
+                                                                    .reverse()
+                                                                    .map((hour) => (
                                                                         <Button
-                                                                            key={ampm}
+                                                                            key={hour}
                                                                             size="icon"
                                                                             variant={
                                                                                 field.value &&
-                                                                                    ((ampm === "AM" &&
-                                                                                        field.value.getHours() < 12) ||
-                                                                                        (ampm === "PM" &&
-                                                                                            field.value.getHours() >= 12))
+                                                                                    field.value.getHours() % 12 === hour % 12
                                                                                     ? "default"
                                                                                     : "ghost"
                                                                             }
                                                                             className="sm:w-full shrink-0 aspect-square"
-                                                                            onClick={() => handleTimeChange("ampm", ampm)}
+                                                                            onClick={() =>
+                                                                                handleTimeChange("hour", hour.toString())
+                                                                            }
                                                                         >
-                                                                            {ampm}
+                                                                            {hour}
                                                                         </Button>
                                                                     ))}
-                                                                </div>
-                                                            </ScrollArea>
-                                                        </div>
+                                                            </div>
+                                                            <ScrollBar
+                                                                orientation="horizontal"
+                                                                className="sm:hidden"
+                                                            />
+                                                        </ScrollArea>
+                                                        <ScrollArea className="w-64 sm:w-auto">
+                                                            <div className="flex sm:flex-col p-2">
+                                                                {Array.from({ length: 12 }, (_, i) => i * 5).map(
+                                                                    (minute) => (
+                                                                        <Button
+                                                                            key={minute}
+                                                                            size="icon"
+                                                                            variant={
+                                                                                field.value &&
+                                                                                    field.value.getMinutes() === minute
+                                                                                    ? "default"
+                                                                                    : "ghost"
+                                                                            }
+                                                                            className="sm:w-full shrink-0 aspect-square"
+                                                                            onClick={() =>
+                                                                                handleTimeChange("minute", minute.toString())
+                                                                            }
+                                                                        >
+                                                                            {minute.toString().padStart(2, "0")}
+                                                                        </Button>
+                                                                    )
+                                                                )}
+                                                            </div>
+                                                            <ScrollBar
+                                                                orientation="horizontal"
+                                                                className="sm:hidden"
+                                                            />
+                                                        </ScrollArea>
+                                                        <ScrollArea className="">
+                                                            <div className="flex sm:flex-col p-2">
+                                                                {["AM", "PM"].map((ampm) => (
+                                                                    <Button
+                                                                        key={ampm}
+                                                                        size="icon"
+                                                                        variant={
+                                                                            field.value &&
+                                                                                ((ampm === "AM" &&
+                                                                                    field.value.getHours() < 12) ||
+                                                                                    (ampm === "PM" &&
+                                                                                        field.value.getHours() >= 12))
+                                                                                ? "default"
+                                                                                : "ghost"
+                                                                        }
+                                                                        className="sm:w-full shrink-0 aspect-square"
+                                                                        onClick={() => handleTimeChange("ampm", ampm)}
+                                                                    >
+                                                                        {ampm}
+                                                                    </Button>
+                                                                ))}
+                                                            </div>
+                                                        </ScrollArea>
                                                     </div>
-                                                </PopoverContent>
-                                            </Popover>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-                            </div>
-                            <div className="flex gap-1.5 mb-4">
+                                                </div>
+                                            </PopoverContent>
+                                        </Popover>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                        </div>
+                        <div className="grid grid-cols-2 gap-2 mb-4">
+                            <div className="flex gap-1.5">
                                 <FormField
                                     control={form.control}
                                     name="content"
@@ -252,24 +254,25 @@ export const PostNewPage = () => {
                                         <FormItem className="grid w-full items-center gap-1.5">
                                             <FormLabel htmlFor="content">Nội dung</FormLabel>
                                             <FormControl>
-                                                <Textarea id="content" {...field} />
+                                                <Textarea className="field-sizing-content" id="content" {...field} />
                                             </FormControl>
                                         </FormItem>
                                     )}
                                 />
                             </div>
 
-                            <div className="space-x-2">
-                                <Button type="button" variant="ghost" onClick={() => navigate('/')}>Quay lại</Button>
-                                <Button type="submit">Tạo</Button>
+                            <div className="rounded border px-3 py-2 markdown-body !text-sm">
+                                <PostContentPreview doc={doc} />
                             </div>
-                        </form>
-                    </Form>
-                </div>
-                <div className="rounded border px-3 py-2 markdown-body !text-sm">
-                    <MarkdownPreview doc={doc} />
-                </div>
-            </div>
+                        </div>
+
+                        <div className="space-x-2">
+                            <Button type="button" variant="ghost" onClick={() => navigate('/')}>Quay lại</Button>
+                            <Button type="submit">Tạo mới</Button>
+                        </div>
+                    </div>
+                </form>
+            </Form>
         </div>
     );
 }

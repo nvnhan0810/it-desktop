@@ -11,11 +11,11 @@ const PostListItem = ({ post }: {post: Post}) => {
         <Link to={`/posts/${post.id}/edit`} className={cn(
             "block border rounded-lg p-4 shadow-sm hover:shadow-md transition",
             {
-                "bg-gray-200": notPublished,
+                "bg-gray-200 dark:bg-zinc-900": notPublished,
             }
         )}>
             <h2 className="text-lg font-semibold">{post.title}</h2>
-            <p className="text-gray-700 break-all">{post.content.substring(0, 100)}...</p>
+            <p className="text-gray-700 dark:text-gray-500 break-all">{post.content.substring(0, 100)}...</p>
             {post.tags != undefined && post.tags.length > 0
                 ? (
                     <div className="flex gap-2 overflow-hidden mt-3">

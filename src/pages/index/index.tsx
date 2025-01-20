@@ -8,10 +8,13 @@ import { Post, PostItemResponse } from "@/types/post.type";
 import { parse } from "date-fns";
 import { CirclePlus, Hash } from "lucide-react";
 import { useEffect, useState } from "react";
+import { shallowEqual } from "react-redux";
 import { Link } from "react-router-dom";
 
 export const IndexPage = () => {
-    const user = useAppSelector((state) => state.auth.user);
+    const { user } = useAppSelector((state) => ({
+        user: state.auth.user
+    }), shallowEqual);
 
     const [loading, setLoading] = useState(false);
     const [page, setPage] = useState(1);
@@ -33,7 +36,6 @@ export const IndexPage = () => {
 
         if (res.status == 200) {
             const data: Post[] = res.data.data.map((item: PostItemResponse) => {
-                console.log(!!item.is_published);
                 return {
                     ...item,
                     isPublished: !!item.is_published,
@@ -80,7 +82,7 @@ export const IndexPage = () => {
                 </div>
             </div>
 
-            <div className="grid gap-3 grid-cols-4 mb-4">
+            <div className="grid gap-3 grid-cols-1 md:grid-cols-2 xl:grid-cols-4 mb-4">
                 {posts.map((item) => {
                     return <PostListItem key={item.id} post={item} />
                 })}

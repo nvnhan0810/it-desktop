@@ -32,7 +32,7 @@ export const authSlice = createSlice({
         builder
             // Fetch User Profile
             .addCase(fetchProfile.fulfilled, (state, action) => {
-                state.user = action.payload;
+                state.user = {...action.payload};
             });
     }
 })
