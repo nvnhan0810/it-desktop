@@ -19,6 +19,7 @@ import { z } from "zod";
 const formSchema = z.object({
     title: z.string(),
     tags: z.string(),
+    description: z.string().nullable().transform((value) => value ?? null),
     is_published: z.boolean(),
     published_at: z.date().nullable().transform((value) => value ?? null),
     content: z.string(),
@@ -245,6 +246,21 @@ export const PostNewPage = () => {
                                 )}
                             />
                         </div>
+
+                        <FormField
+                            control={form.control}
+                            name="description"
+                            render={({ field }) => (
+                                <FormItem className="mb-4 grid w-full items-center gap-1.5">
+                                    <FormLabel htmlFor="description">Mô tả</FormLabel>
+                                    <FormControl>
+                                        <Input id="description" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+
                         <div className="grid grid-cols-2 gap-2 mb-4">
                             <div className="flex gap-1.5">
                                 <FormField

@@ -20,6 +20,7 @@ import { z } from "zod";
 
 const formSchema = z.object({
     title: z.string(),
+    description: z.string().nullable().transform((value) => value ?? null),
     tags: z.string(),
     is_published: z.boolean(),
     published_at: z.date().nullable().transform((value) => value ?? null),
@@ -63,6 +64,7 @@ export const EditForm = ({ post}: { post: Post}) => {
             title: post.title,
             is_published: post.isPublished,
             published_at: post.publishedDate,
+            description: post.description,
             content: post.content,
             tags: post.tags?.reduce((result, item) => {
                 if (result == '') {
@@ -287,6 +289,19 @@ export const EditForm = ({ post}: { post: Post}) => {
                                 )}
                             />
                         </div>
+                        <FormField
+                            control={form.control}
+                            name="description"
+                            render={({ field }) => (
+                                <FormItem className="mb-4 grid w-full items-center gap-1.5">
+                                    <FormLabel htmlFor="description">Mô tả</FormLabel>
+                                    <FormControl>
+                                        <Input id="description" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
                         <div className="grid grid-cols-2 gap-2 mb-4">
                             <div className="flex gap-1.5">
                                 <FormField

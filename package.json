@@ -1,7 +1,7 @@
 {
-  "name": "it-desktop",
-  "productName": "it-desktop",
-  "version": "1.0.2",
+  "name": "it-blog-desktop",
+  "productName": "it-blog-desktop",
+  "version": "1.0.3",
   "description": "My Electron application description",
   "main": ".vite/build/main.js",
   "scripts": {
